@@ -991,10 +991,11 @@ class LibvirtDriver(driver.ComputeDriver):
         dom.managedSave(0)
 
     @exception.wrap_exception()
-    def resume(self, instance):
+    def resume(self, instance, network_info, block_device_info=None):
         """resume the specified instance"""
-        dom = self._lookup_by_name(instance['name'])
-        self._create_domain(domain=dom)
+        xml = self._get_domain_xml(instance)
+        self._create_domain_and_network(xml, instance, network_info,
+                                        block_device_info)
 
     @exception.wrap_exception()
     def resume_state_on_host_boot(self, context, instance, network_info,
